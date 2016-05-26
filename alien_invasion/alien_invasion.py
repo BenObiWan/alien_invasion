@@ -3,6 +3,7 @@ import sys
 import pygame
 
 from settings import Settings
+from ship import Ship
 
 def run_game():
     #initialise
@@ -11,6 +12,9 @@ def run_game():
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
     pygame.display.set_caption("Alien Invasion")
 
+    #make the ship
+    ship = Ship(screen)
+
     #main loop
     while True:
         #watch for keyboard and mouse events
@@ -18,6 +22,7 @@ def run_game():
             if event.type == pygame.QUIT:
                 sys.exit()
         screen.fill(ai_settings.bg_color)
+        ship.blitme()
         # Make the most recently drawn screen visible.
         pygame.display.flip()
 
