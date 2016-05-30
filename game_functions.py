@@ -16,11 +16,11 @@ def check_events(ai_settings, screen, stats, play_button, ship, aliens, bullets)
             check_play_button(ai_settings, screen, stats, play_button, ship,
                     aliens, bullets, mouse_x, mouse_y)
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, ai_settings, screen, ship, bullets)
+            check_keydown_events(event, ai_settings, screen, stats, ship, aliens, bullets)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
 
-def check_keydown_events(event, ai_settings, screen, ship, bullets):
+def check_keydown_events(event, ai_settings, screen, stats, ship, aliens, bullets):
     """Respond to keypresses."""
     if event.key == pygame.K_RIGHT:
         # move the ship to the right.
@@ -30,6 +30,8 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
         ship.moving_left = True
     elif event.key == pygame.K_SPACE:
         fire_bullet(ai_settings, screen, ship, bullets)
+    elif event.key == pygame.K_p:
+        start_game(ai_settings, screen, stats, ship, aliens, bullets)
 
 def check_keyup_events(event, ship):
     """Respond to key releases."""
@@ -159,12 +161,20 @@ def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
 
     else:
         stats.game_active = False
+        pygame.mouse.set_visible(True)
 
 def check_play_button(ai_settings, screen, stats, play_button, ship, aliens,
         bullets, mouse_x, mouse_y):
     """Start a new game when the player clicks Play."""
-    button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
-    if button_clicked and not stats.game_active:
+    if play_button.rect.collidepoint(mouse_x, mouse_y):
+        start_game(ai_settings, screen, stats, ship, aliens, bullets)
+
+def start_game(ai_settings, screen, stats, ship, aliens, bullets):
+    """Start a new game."""
+    if not stats.game_active:
+        # Hide the mouse cursor.
+        pygame.mouse.set_visible(False)
+
         # Reset the game statistics.
         stats.reset_stats()
         stats.game_active = True
@@ -176,4 +186,3 @@ def check_play_button(ai_settings, screen, stats, play_button, ship, aliens,
         # Create a new fleet and center the ship.
         create_fleet(ai_settings, screen, ship, aliens)
         ship.center_ship()
-
